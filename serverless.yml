@@ -7,7 +7,19 @@ provider:
   runtime: python3.12
   region: ${opt:region, 'us-east-1'}
   stage: ${opt:stage, 'dev'}
+  environment:
+    TEMPOOK_TOKEN: ${env:TEMPOOK_TOKEN}
+    TEMPOOK_DOWNLOAD_BUCKET: semper-datawarehouse
+    TEMPOOK_S3_PREFIX: chuva-prevista-smap/
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+          Resource: arn:aws:s3:::semper-datawarehouse/chuva-prevista-smap/*
 
 functions:
   main:
     handler: functions/handler.handler
+    timeout: 180
